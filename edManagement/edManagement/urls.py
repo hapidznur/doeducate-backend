@@ -29,7 +29,6 @@ router.register(r'siswa', sv.StudentViewSet, basename="student")
 router.register(r'kelas', sv.GradeViewSet, basename="kelas")
 router.register(r'guru', sv.TeacherViewSet, basename="guru")
 
-
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [

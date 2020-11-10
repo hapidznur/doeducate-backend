@@ -12,6 +12,10 @@ from rest_framework import status
 @api_view(['GET', 'POST', 'DELETE'])
 def student_list(request):
     if request.method == 'GET':
+        if request.GET.get("nama"):
+            found_students = Student.objects.filter(nama__icontains=request.GET.get("nama"))
+            found_students_sr = StudentSerializer(found_students, many=True)
+            return JsonResponse(found_students_sr.data, safe=False)
         students = Student.objects.all()
         students_serializer = StudentSerializer(students, many=True)
         return JsonResponse(students_serializer.data, safe=False)
@@ -27,14 +31,14 @@ def student_list(request):
 @api_view(['GET', 'PUT', 'DELETE'])
 def student_detail(request, pk):
     # find tutorial by pk (id)
-    try: 
+    try:
         tutorial = Student.objects.get(pk=pk) 
     except Tutorial.DoesNotExist:
         return JsonResponse({'message': 'The tutorial does not exist'}, status=status.HTTP_404_NOT_FOUND)
     if request.method == 'GET': 
         student_serializer = StudentSerializer(tutorial) 
         return JsonResponse(student_serializer.data) 
- 
+
     elif request.method == 'PUT': 
         student = JSONParser().parse(request) 
         student_serializer = StudentSerializer(tutorial, data=student) 
@@ -45,6 +49,17 @@ def student_detail(request, pk):
     elif request.method == 'DELETE': 
         Student.delete() 
         return JsonResponse({'message': 'Tutorial was deleted successfully!'})
+
+@api_view(['GET'])
+def student_detail(request, query):
+    print(query)
+    # try:
+    #     tutorial = Student.objects.filter(pk=pk) 
+    # except Tutorial.DoesNotExist:
+    #     return JsonResponse({'message': 'The tutorial does not exist'}, status=status.HTTP_404_NOT_FOUND)
+    # if request.method == 'GET': 
+    #     student_serializer = StudentSerializer(tutorial) 
+    return JsonResponse("test")
 
 class StudentViewSet(viewsets.ModelViewSet):
     """
